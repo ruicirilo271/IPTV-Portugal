@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>IPTV Portugal 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            margin: 0;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #00d4ff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+        form {
+            margin-bottom: 30px;
+        }
+        select {
+            padding: 12px 16px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ffffff;
+            color: #333;
+            width: 300px;
+            max-width: 90%;
+            margin-right: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            background-color: #00d4ff;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 212, 255, 0.4);
+        }
+        button:hover {
+            background-color: #00a0cc;
+        }
+        video {
+            margin-top: 30px;
+            width: 90%;
+            max-width: 900px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+        @media (max-width: 500px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            select, button {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>📺 IPTV Portugal 2025</h1>
+    <form method="POST">
+        <select name="canal">
+            {% for canal in canais %}
+                <option value="{{ canal.url }}" {% if selected_url == canal.url %}selected{% endif %}>
+                    {{ canal.nome }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">▶ Assistir</button>
+    </form>
+
+    {% if selected_url %}
+        <video id="video" controls autoplay></video>
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+        <script>
+            const video = document.getElementById('video');
+            const videoSrc = "{{ selected_url }}";
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+            } else {
+                alert("Seu navegador não suporta vídeo HLS.");
+            }
+        </script>
+    {% endif %}
+</body>
+</html>
